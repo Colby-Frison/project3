@@ -41,15 +41,15 @@ class NovelQueue {
 private:
     Queue<DT>* front;
     Queue<DT>* rear;
-    Queue<DT>* NodePtrs[100];  // Static array for holding sorted job pointers
+    DT* NodePtrs[100];  // Static array for holding job pointers directly
     int size;
 
     // Helper function to sort NodePtrs based on job ID
     void sortNodePtrs() {
         for (int i = 0; i < size - 1; ++i) {
             for (int j = i + 1; j < size; ++j) {
-                if (NodePtrs[i]->JobPointer->job_id > NodePtrs[j]->JobPointer->job_id) {
-                    Queue<DT>* temp = NodePtrs[i];
+                if (NodePtrs[i]->job_id > NodePtrs[j]->job_id) {
+                    DT* temp = NodePtrs[i];
                     NodePtrs[i] = NodePtrs[j];
                     NodePtrs[j] = temp;
                 }
@@ -69,7 +69,7 @@ public:
             front = newNode;
         }
         rear = newNode;
-        NodePtrs[size++] = newNode;
+        NodePtrs[size++] = job;  // Store the job pointer directly in the array
         sortNodePtrs();
     }
 
@@ -81,9 +81,9 @@ public:
         if (!front) rear = nullptr;
         DT* job = temp->JobPointer;
 
-        // Remove the dequeued node from NodePtrs
+        // Remove the dequeued job from NodePtrs
         for (int i = 0; i < size; ++i) {
-            if (NodePtrs[i] == temp) {
+            if (NodePtrs[i] == job) {
                 for (int j = i; j < size - 1; ++j) {
                     NodePtrs[j] = NodePtrs[j + 1];
                 }
@@ -98,11 +98,11 @@ public:
     // Method to modify a job's attributes
     void modify(int job_id, int new_priority, int new_job_type, int new_cpu_time, int new_memory) {
         for (int i = 0; i < size; ++i) {
-            if (NodePtrs[i]->JobPointer->job_id == job_id) {
-                NodePtrs[i]->JobPointer->priority = new_priority;
-                NodePtrs[i]->JobPointer->job_type = new_job_type;
-                NodePtrs[i]->JobPointer->cpu_time_consumed = new_cpu_time;
-                NodePtrs[i]->JobPointer->memory_consumed = new_memory;
+            if (NodePtrs[i]->job_id == job_id) {
+                NodePtrs[i]->priority = new_priority;
+                NodePtrs[i]->job_type = new_job_type;
+                NodePtrs[i]->cpu_time_consumed = new_cpu_time;
+                NodePtrs[i]->memory_consumed = new_memory;
                 sortNodePtrs();
                 break;
             }
@@ -112,12 +112,12 @@ public:
     // Method to change a specific field of a job
     void change(int job_id, int field_index, int new_value) {
         for (int i = 0; i < size; ++i) {
-            if (NodePtrs[i]->JobPointer->job_id == job_id) {
+            if (NodePtrs[i]->job_id == job_id) {
                 switch (field_index) {
-                    case 1: NodePtrs[i]->JobPointer->priority = new_value; break;
-                    case 2: NodePtrs[i]->JobPointer->job_type = new_value; break;
-                    case 3: NodePtrs[i]->JobPointer->cpu_time_consumed = new_value; break;
-                    case 4: NodePtrs[i]->JobPointer->memory_consumed = new_value; break;
+                    case 1: NodePtrs[i]->priority = new_value; break;
+                    case 2: NodePtrs[i]->job_type = new_value; break;
+                    case 3: NodePtrs[i]->cpu_time_consumed = new_value; break;
+                    case 4: NodePtrs[i]->memory_consumed = new_value; break;
                     default: break;
                 }
                 sortNodePtrs();
@@ -129,9 +129,9 @@ public:
     // Method to promote a job closer to the front of the queue
     void promote(int job_id, int positions) {
         for (int i = 0; i < size; ++i) {
-            if (NodePtrs[i]->JobPointer->job_id == job_id) {
+            if (NodePtrs[i]->job_id == job_id) {
                 int new_pos = (i - positions < 0) ? 0 : i - positions;
-                Queue<DT>* temp = NodePtrs[i];
+                DT* temp = NodePtrs[i];
                 for (int j = i; j > new_pos; --j) {
                     NodePtrs[j] = NodePtrs[j - 1];
                 }
@@ -146,7 +146,7 @@ public:
         NovelQueue<DT>* newQueue = new NovelQueue<DT>();
 
         // Copy current jobs to a temporary array
-        Queue<DT>* tempQueue[100];
+        DT* tempQueue[100];
         for (int i = 0; i < size; ++i) {
             tempQueue[i] = NodePtrs[i];
         }
@@ -155,17 +155,17 @@ public:
         for (int i = 0; i < size - 1; ++i) {
             for (int j = i + 1; j < size; ++j) {
                 bool swap = false;
-                if (attribute_index == 1 && tempQueue[i]->JobPointer->job_id > tempQueue[j]->JobPointer->job_id) {
+                if (attribute_index == 1 && tempQueue[i]->job_id > tempQueue[j]->job_id) {
                     swap = true;
-                } else if (attribute_index == 2 && tempQueue[i]->JobPointer->priority < tempQueue[j]->JobPointer->priority) {
+                } else if (attribute_index == 2 && tempQueue[i]->priority < tempQueue[j]->priority) {
                     swap = true;
-                } else if (attribute_index == 3 && tempQueue[i]->JobPointer->cpu_time_consumed < tempQueue[j]->JobPointer->cpu_time_consumed) {
+                } else if (attribute_index == 3 && tempQueue[i]->cpu_time_consumed < tempQueue[j]->cpu_time_consumed) {
                     swap = true;
-                } else if (attribute_index == 4 && tempQueue[i]->JobPointer->memory_consumed < tempQueue[j]->JobPointer->memory_consumed) {
+                } else if (attribute_index == 4 && tempQueue[i]->memory_consumed < tempQueue[j]->memory_consumed) {
                     swap = true;
                 }
                 if (swap) {
-                    Queue<DT>* temp = tempQueue[i];
+                    DT* temp = tempQueue[i];
                     tempQueue[i] = tempQueue[j];
                     tempQueue[j] = temp;
                 }
@@ -174,7 +174,7 @@ public:
 
         // Enqueue the sorted jobs into a new queue
         for (int i = 0; i < size; ++i) {
-            newQueue->enqueue(tempQueue[i]->JobPointer);
+            newQueue->enqueue(tempQueue[i]);
         }
         return newQueue;
     }
@@ -182,7 +182,7 @@ public:
     // Method to display all jobs
     void display() const {
         for (int i = 0; i < size; ++i) {
-            NodePtrs[i]->JobPointer->display();
+            NodePtrs[i]->display();
         }
     }
 
@@ -195,7 +195,7 @@ public:
     void listJobs() const {
         for (int i = 0; i < size; ++i) {
             cout << "Position " << i << ": ";
-            NodePtrs[i]->JobPointer->display();
+            NodePtrs[i]->display();
         }
     }
 };
@@ -204,7 +204,7 @@ public:
 int main() {
     int n;  // Number of commands
     cin >> n;  // Read the number of commands
-    NovelQueue<CPUJob*>* myNovelQueue = new NovelQueue<CPUJob*>();  
+    NovelQueue<CPUJob>* myNovelQueue = new NovelQueue<CPUJob>();  // Fix instantiation
     char command;
 
     // Variables for job attributes
@@ -247,7 +247,7 @@ int main() {
             }
             case 'O': {  // Reorder
                 cin >> attribute_index;
-                NovelQueue<CPUJob*>* reorderedQueue = myNovelQueue->reorder(attribute_index);
+                NovelQueue<CPUJob>* reorderedQueue = myNovelQueue->reorder(attribute_index);
                 cout << "Reordered Queue:" << endl;
                 reorderedQueue->display();
                 delete reorderedQueue;
