@@ -110,7 +110,8 @@ public:
         size--;
         delete temp;
 
-        output += "Dequeued Job:\n";
+        output += "Dequeued Job: ";
+        output += "\n";
         job->display(output);
         output += "Jobs after dequeue:\n";
         display(output);
@@ -285,11 +286,32 @@ public:
         return newQueue;
     }
 
-    // List jobs sorted by job IDs
+    // List jobs sorted by job_id
     void listJobs(string& output) const {
-        output += "List of jobs sorted by job ID:\n";
+        // Create a temporary array to hold the jobs in sorted order
+        Queue<DT>* tempQueue[100];
+
+        // Copy the current NodePtrs into the temp array
         for (int i = 0; i < size; ++i) {
-            NodePtrs[i]->JobPointer->display(output);
+            tempQueue[i] = NodePtrs[i];
+        }
+
+        // Sort the temp array by job_id
+        for (int i = 0; i < size - 1; ++i) {
+            for (int j = i + 1; j < size; ++j) {
+                if (tempQueue[i]->JobPointer->job_id > tempQueue[j]->JobPointer->job_id) {
+                    // Swap jobs if the current job_id is greater than the next
+                    Queue<DT>* temp = tempQueue[i];
+                    tempQueue[i] = tempQueue[j];
+                    tempQueue[j] = temp;
+                }
+            }
+        }
+
+        // Output the sorted jobs
+        output += "List of jobs sorted by job IDs:\n";
+        for (int i = 0; i < size; ++i) {
+            tempQueue[i]->JobPointer->display(output);
         }
     }
 
