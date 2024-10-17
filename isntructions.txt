@@ -1,0 +1,9 @@
+The project3.cpp is the actual Consumed
+
+the porject3Debug.cpp is the same code but changed 
+to save the output to a txt file that is then compared using the compare.cpp
+
+Thisv is kinda redundant, bu it works (hopefully)
+
+Also there are folders containing inputs and outputs
+
