@@ -80,7 +80,7 @@ public:
     NovelQueue() : front(nullptr), rear(nullptr), size(0) {}
 
     // Method to enqueue a new job
-    void enqueue(DT* job, string& output) {  // Accepts CPUJob* directly
+    void enqueue(DT* job, string& output, bool print_output = true) {
         Queue<DT>* newNode = new Queue<DT>(job);
         if (rear != nullptr) {
             rear->next = newNode;
@@ -89,12 +89,16 @@ public:
         }
         rear = newNode;
         NodePtrs[size++] = job;  // Store the job pointer directly in the array
-        output += "Enqueued Job:\n";
-        job->display(output);
-        output += "Jobs after enqueue:\n";
-        display(output);
-        sortNodePtrs();
+
+        // Only print if print_output is true
+        if (print_output) {
+            output += "Enqueued Job:\n";
+            job->display(output);
+            output += "Jobs after enqueue:\n";
+            display(output);
+        }
     }
+
 
     // Method to dequeue a job
     DT* dequeue(string& output) {  // Returns CPUJob*
@@ -238,6 +242,7 @@ public:
 
     // Method to reorder based on a specified attribute
     NovelQueue<DT>* reorder(int attribute_index, string& output) {
+        // Create a new NovelQueue for the reordered jobs
         NovelQueue<DT>* newQueue = new NovelQueue<DT>();
 
         // Copy current jobs to a temporary array
@@ -250,15 +255,35 @@ public:
         for (int i = 0; i < size - 1; ++i) {
             for (int j = i + 1; j < size; ++j) {
                 bool swap = false;
-                if (attribute_index == 1 && tempQueue[i]->job_id > tempQueue[j]->job_id) {
-                    swap = true;
-                } else if (attribute_index == 2 && tempQueue[i]->priority < tempQueue[j]->priority) {
-                    swap = true;
-                } else if (attribute_index == 3 && tempQueue[i]->cpu_time_consumed < tempQueue[j]->cpu_time_consumed) {
-                    swap = true;
-                } else if (attribute_index == 4 && tempQueue[i]->memory_consumed < tempQueue[j]->memory_consumed) {
-                    swap = true;
+
+                // Sorting by the specified attribute
+                switch (attribute_index) {
+                    case 1:  // Sort by Job ID (ascending)
+                        if (tempQueue[i]->job_id > tempQueue[j]->job_id) {
+                            swap = true;
+                        }
+                        break;
+                    case 2:  // Sort by Priority (ascending)
+                        if (tempQueue[i]->priority > tempQueue[j]->priority) {
+                            swap = true;
+                        }
+                        break;
+                    case 3:  // Sort by CPU Time Consumed (ascending)
+                        if (tempQueue[i]->cpu_time_consumed > tempQueue[j]->cpu_time_consumed) {
+                            swap = true;
+                        }
+                        break;
+                    case 4:  // Sort by Memory Consumed (ascending)
+                        if (tempQueue[i]->memory_consumed > tempQueue[j]->memory_consumed) {
+                            swap = true;
+                        }
+                        break;
+                    default:
+                        output += "Invalid attribute index!\n";
+                        return newQueue;
                 }
+
+                // Swap if necessary
                 if (swap) {
                     DT* temp = tempQueue[i];
                     tempQueue[i] = tempQueue[j];
@@ -267,14 +292,30 @@ public:
             }
         }
 
-        // Enqueue the sorted jobs into a new queue
-        for (int i = 0; i < size; ++i) {
-            newQueue->enqueue(tempQueue[i], output);
+        // Clear the current queue to rebuild it
+        Queue<DT>* current = front;
+        while (current != nullptr) {
+            Queue<DT>* tempNode = current;
+            current = current->next;
+            delete tempNode;
         }
+        front = rear = nullptr;
+
+        // Enqueue the sorted jobs into both the NodePtrs array and the linked queue
+        for (int i = 0; i < size; ++i) {
+            newQueue->enqueue(tempQueue[i], output, true);  // Suppress enqueue output
+        }
+
+        // Rebuild the NodePtrs array based on the new queue order
+        for (int i = 0; i < size; ++i) {
+            NodePtrs[i] = tempQueue[i];
+        }
+
         output += "Reordered Queue by attribute " + to_string(attribute_index) + ":\n";
         newQueue->display(output);
         return newQueue;
     }
+
 
     // Method to display all jobs
     void display(string& output) const {
@@ -290,9 +331,26 @@ public:
 
     // Method to list jobs in order of job IDs
     void listJobs(string& output) const {
+        // Create a temporary array to store jobs for sorting
+        DT* tempQueue[100];
+        for (int i = 0; i < size; ++i) {
+            tempQueue[i] = NodePtrs[i];
+        }
+
+        // Sort jobs by job_id (ascending)
+        for (int i = 0; i < size - 1; ++i) {
+            for (int j = i + 1; j < size; ++j) {
+                if (tempQueue[i]->job_id > tempQueue[j]->job_id) {
+                    DT* temp = tempQueue[i];
+                    tempQueue[i] = tempQueue[j];
+                    tempQueue[j] = temp;
+                }
+            }
+        }
+
         output += "List of jobs sorted by job IDs:\n";
         for (int i = 0; i < size; ++i) {
-            NodePtrs[i]->display(output);
+            tempQueue[i]->display(output);  // Display sorted jobs
         }
     }
 };
