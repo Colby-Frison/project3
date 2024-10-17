@@ -7,20 +7,20 @@ Job ID: 102, Priority: 3, Job Type: 1, CPU Time Consumed: 100, Memory Consumed: 
 Jobs after enqueue:
 Job ID: 101, Priority: 5, Job Type: 2, CPU Time Consumed: 150, Memory Consumed: 2000
 Job ID: 102, Priority: 3, Job Type: 1, CPU Time Consumed: 100, Memory Consumed: 1024
-Enqueued Job:
+Enqueued Job: 
 Job ID: 103, Priority: 7, Job Type: 4, CPU Time Consumed: 250, Memory Consumed: 4096
 Jobs after enqueue:
 Job ID: 101, Priority: 5, Job Type: 2, CPU Time Consumed: 150, Memory Consumed: 2000
 Job ID: 102, Priority: 3, Job Type: 1, CPU Time Consumed: 100, Memory Consumed: 1024
 Job ID: 103, Priority: 7, Job Type: 4, CPU Time Consumed: 250, Memory Consumed: 4096
-Enqueued Job:
+Enqueued Job: 
 Job ID: 104, Priority: 2, Job Type: 3, CPU Time Consumed: 300, Memory Consumed: 2048
 Jobs after enqueue:
 Job ID: 101, Priority: 5, Job Type: 2, CPU Time Consumed: 150, Memory Consumed: 2000
 Job ID: 102, Priority: 3, Job Type: 1, CPU Time Consumed: 100, Memory Consumed: 1024
 Job ID: 103, Priority: 7, Job Type: 4, CPU Time Consumed: 250, Memory Consumed: 4096
 Job ID: 104, Priority: 2, Job Type: 3, CPU Time Consumed: 300, Memory Consumed: 2048
-Enqueued Job:
+Enqueued Job: 
 Job ID: 105, Priority: 6, Job Type: 5, CPU Time Consumed: 200, Memory Consumed: 512
 Jobs after enqueue:
 Job ID: 101, Priority: 5, Job Type: 2, CPU Time Consumed: 150, Memory Consumed: 2000
@@ -36,7 +36,7 @@ Job ID: 101, Priority: 5, Job Type: 2, CPU Time Consumed: 150, Memory Consumed: 
 Job ID: 102, Priority: 3, Job Type: 1, CPU Time Consumed: 100, Memory Consumed: 1024
 Job ID: 104, Priority: 2, Job Type: 3, CPU Time Consumed: 300, Memory Consumed: 2048
 Job ID: 105, Priority: 6, Job Type: 5, CPU Time Consumed: 200, Memory Consumed: 512
-Dequeued Job:
+Dequeued Job: 
 Job ID: 103, Priority: 7, Job Type: 4, CPU Time Consumed: 250, Memory Consumed: 4096
 Jobs after dequeue:
 Job ID: 101, Priority: 5, Job Type: 2, CPU Time Consumed: 150, Memory Consumed: 2000
@@ -57,7 +57,7 @@ Job ID: 101, Priority: 8, Job Type: 2, CPU Time Consumed: 150, Memory Consumed: 
 Job ID: 102, Priority: 3, Job Type: 1, CPU Time Consumed: 100, Memory Consumed: 1024
 Job ID: 104, Priority: 2, Job Type: 3, CPU Time Consumed: 300, Memory Consumed: 2048
 Job ID: 105, Priority: 7, Job Type: 5, CPU Time Consumed: 220, Memory Consumed: 1024
-Enqueued Job:
+Enqueued Job: 
 Job ID: 106, Priority: 4, Job Type: 2, CPU Time Consumed: 320, Memory Consumed: 5120
 Jobs after enqueue:
 Job ID: 101, Priority: 8, Job Type: 2, CPU Time Consumed: 150, Memory Consumed: 2000
@@ -85,7 +85,7 @@ Job ID: 102, Priority: 3, Job Type: 1, CPU Time Consumed: 100, Memory Consumed: 
 Job ID: 104, Priority: 2, Job Type: 3, CPU Time Consumed: 300, Memory Consumed: 2048
 Job ID: 106, Priority: 4, Job Type: 2, CPU Time Consumed: 320, Memory Consumed: 5120
 Job ID: 105, Priority: 7, Job Type: 5, CPU Time Consumed: 220, Memory Consumed: 1024
-Enqueued Job:
+Enqueued Job: 
 Job ID: 107, Priority: 3, Job Type: 4, CPU Time Consumed: 180, Memory Consumed: 1500
 Jobs after enqueue:
 Job ID: 101, Priority: 8, Job Type: 2, CPU Time Consumed: 150, Memory Consumed: 2000
@@ -95,7 +95,7 @@ Job ID: 106, Priority: 4, Job Type: 2, CPU Time Consumed: 320, Memory Consumed: 
 Job ID: 105, Priority: 7, Job Type: 5, CPU Time Consumed: 220, Memory Consumed: 1024
 Job ID: 107, Priority: 3, Job Type: 4, CPU Time Consumed: 180, Memory Consumed: 1500
 Number of elements in the queue: 6
-Dequeued Job:
+Dequeued Job: 
 Job ID: 101, Priority: 8, Job Type: 2, CPU Time Consumed: 150, Memory Consumed: 2000
 Jobs after dequeue:
 Job ID: 102, Priority: 3, Job Type: 1, CPU Time Consumed: 100, Memory Consumed: 1024

@@ -68,6 +68,15 @@ public:
 
     // Enqueue a new job
     void enqueue(DT* job, string& output, bool print_output = true) {
+        // Check if job ID already exists
+        for (int i = 0; i < size; ++i) {
+            if (NodePtrs[i]->JobPointer->job_id == job->job_id) {
+                output += "Job ID " + to_string(job->job_id) + " already exists!\n";
+                return;  // Stop adding the job
+            }
+        }
+
+
         Queue<DT>* newNode = new Queue<DT>(job);
         if (!front) {
             front = newNode;
@@ -82,7 +91,8 @@ public:
         NodePtrs[size++] = newNode;
 
         if (print_output) {
-            output += "Enqueued Job: \n";
+            output += "Enqueued Job: ";
+            output += "\n";
             job->display(output);
             output += "Jobs after enqueue:\n";
             display(output);
@@ -120,8 +130,11 @@ public:
 
     // Modify job attributes
     void modify(int job_id, int new_priority, int new_job_type, int new_cpu_time, int new_memory, string& output) {
+        bool job_found = false;
+        
         for (int i = 0; i < size; ++i) {
             if (NodePtrs[i]->JobPointer->job_id == job_id) {
+                job_found = true;
                 NodePtrs[i]->JobPointer->priority = new_priority;
                 NodePtrs[i]->JobPointer->job_type = new_job_type;
                 NodePtrs[i]->JobPointer->cpu_time_consumed = new_cpu_time;
@@ -135,12 +148,20 @@ public:
                 break;
             }
         }
+
+        if (!job_found) {
+            output += "Job with ID " + to_string(job_id) + " not found in the queue.\n";
+        }
     }
 
     // Change a specific field of a job
     void change(int job_id, int field_index, int new_value, string& output) {
+        bool job_found = false;
+
         for (int i = 0; i < size; ++i) {
             if (NodePtrs[i]->JobPointer->job_id == job_id) {
+                job_found = true;
+
                 switch (field_index) {
                     case 1: NodePtrs[i]->JobPointer->priority = new_value; break;
                     case 2: NodePtrs[i]->JobPointer->job_type = new_value; break;
@@ -157,10 +178,16 @@ public:
                 break;
             }
         }
+
+        if (!job_found) {
+            output += "Job with ID " + to_string(job_id) + " not found in the queue.\n";
+        }
     }
 
     // Promote a job within the queue
     void promote(int job_id, int positions, string& output) {
+        bool job_found = false;
+
         Queue<DT>* prev = nullptr;
         Queue<DT>* curr = front;
 
@@ -172,6 +199,7 @@ public:
 
         // If the job was found
         if (curr) {
+            job_found = true;
             // Step 2: Remove the job from the current position in the linked list
             if (prev) {
                 prev->next = curr->next;  // Unlink from the current position
@@ -228,8 +256,10 @@ public:
             curr->JobPointer->display(output);
             output += "Jobs after promotion:\n";
             display(output);
-        } else {
-            output += "Job ID " + to_string(job_id) + " not found for promotion.\n";
+        }
+
+        if (!job_found) {
+            output += "Job with ID " + to_string(job_id) + " not found in the queue.\n";
         }
     }
 
