@@ -91,10 +91,12 @@ public:
         NodePtrs[size++] = newNode;
 
         if (print_output) {
-            output += "Enqueued Job: ";
+            output += "Enqueued Job:";
+            output += " ";
             output += "\n";
             job->display(output);
-            output += "Jobs after enqueue:\n";
+            output += "Jobs after enqueue: ";
+            output += "\n";
             display(output);
         }
     }
@@ -123,7 +125,8 @@ public:
         output += "Dequeued Job: ";
         output += "\n";
         job->display(output);
-        output += "Jobs after dequeue:\n";
+        output += "Jobs after dequeue: ";
+        output += "\n";
         display(output);
         return job;
     }
