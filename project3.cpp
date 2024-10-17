@@ -4,12 +4,13 @@
 using namespace std;
 
 /*
-Okay so issue Im having is when a task is promoted its promoted visually but not actually in the queue
-I think thats the main reason why it isnt matching up
+fixed issue with promotion, but now there is an issue
+with the output, after reorder is called it queues all the 
+operations back and causes all the output statment to occur
 
-So to get it working its just making the promotion method actually work
+I'm about to implement new code to try to adjust this but am commiting incase it blows up
 
-I'm going to bed
+The trash file is going to contain the old version as a backup
 */
 
 // CPUJob class definition
@@ -34,6 +35,7 @@ public:
                   to_string(memory_consumed) + "\n";
     }
 
+    //display for debugg purposes
     void display() const {
         cout << "Job ID: " << to_string(job_id) << ", Priority: " << to_string(priority) << 
                   ", Job Type: " << to_string(job_type) << ", CPU Time Consumed: " << 
@@ -80,7 +82,7 @@ public:
     // Method to enqueue a new job
     void enqueue(DT* job, string& output) {  // Accepts CPUJob* directly
         Queue<DT>* newNode = new Queue<DT>(job);
-        if (rear) {
+        if (rear != nullptr) {
             rear->next = newNode;
         } else {
             front = newNode;
@@ -101,7 +103,6 @@ public:
 
         Queue<DT>* temp = front;
         DT* jobT = front->JobPointer;
-        jobT->display();
         front = front->next;
         if (!front) 
             rear = nullptr;
@@ -169,20 +170,61 @@ public:
 
     // Method to promote a job closer to the front of the queue
     void promote(int job_id, int positions, string& output) {
+        // First, adjust the NodePtrs array (as is already done)
         for (int i = 0; i < size; ++i) {
             if (NodePtrs[i]->job_id == job_id) {
                 int new_pos = i - positions; // Calculate the new position
                 if (new_pos < 0) {
                     new_pos = 0; // Ensure it doesn't go out of bounds
                 }
-                // Move the job to the new position
+                // Move the job to the new position in NodePtrs
                 DT* temp = NodePtrs[i];
                 for (int j = i; j > new_pos; --j) {
                     NodePtrs[j] = NodePtrs[j - 1]; // Shift jobs right
                 }
                 NodePtrs[new_pos] = temp; // Place promoted job in new position
-                DT* job = front->JobPointer;
-                job->display();
+
+                // Now, adjust the linked list queue to match the array change
+                Queue<DT>* prev = nullptr;
+                Queue<DT>* curr = front;
+
+                // Find the node in the linked list corresponding to the job
+                while (curr && curr->JobPointer->job_id != job_id) {
+                    prev = curr;
+                    curr = curr->next;
+                }
+
+                // If the node was found and it's not already at the front
+                if (curr && prev) {
+                    // Remove the node from its current position in the queue
+                    prev->next = curr->next;
+                    if (curr == rear) {
+                        rear = prev;  // Update rear if needed
+                    }
+
+                    // Re-insert the node at the correct new position
+                    Queue<DT>* insert_pos = front;
+                    Queue<DT>* insert_prev = nullptr;
+                    for (int j = 0; j < new_pos; ++j) {
+                        insert_prev = insert_pos;
+                        insert_pos = insert_pos->next;
+                    }
+
+                    // Insert the node in the new position
+                    if (insert_prev) {
+                        insert_prev->next = curr;
+                    } else {
+                        front = curr;  // Move to the front if needed
+                    }
+                    curr->next = insert_pos;
+
+                    // Update rear if we inserted at the end
+                    if (!insert_pos) {
+                        rear = curr;
+                    }
+                }
+
+                // Output the changes
                 output += "Promoted Job ID " + to_string(job_id) + " by " + to_string(positions) + " Position(s):\n";
                 temp->display(output);
                 output += "Jobs after promotion:\n";
@@ -191,6 +233,7 @@ public:
             }
         }
     }
+
 
 
     // Method to reorder based on a specified attribute
@@ -325,5 +368,6 @@ int main() {
 
     cout << output;
     delete myNovelQueue;
+    
     return 0;
 }
