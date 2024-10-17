@@ -63,21 +63,64 @@ private:
     DT* NodePtrs[100];  // Static array for holding job pointers directly
     int size;
 
+    int sort_attribute; // 1: job_id, 2: priority, 3: cpu_time, 4: memory
+
     // Helper function to sort NodePtrs based on job ID
     void sortNodePtrs() {
+        // Sort the NodePtrs array based on the selected attribute
         for (int i = 0; i < size - 1; ++i) {
             for (int j = i + 1; j < size; ++j) {
-                if (NodePtrs[i]->job_id > NodePtrs[j]->job_id) {
+                bool swap = false;
+                switch (sort_attribute) {
+                    case 1: // Sort by job_id
+                        swap = (NodePtrs[i]->job_id > NodePtars[j]->job_id);
+                        break;
+                    case 2: // Sort by priority
+                        swap = (NodePtrs[i]->priority < NodePtrs[j]->priority);
+                        break;
+                    case 3: // Sort by CPU time consumed
+                        swap = (NodePtrs[i]->cpu_time_consumed < NodePtrs[j]->cpu_time_consumed);
+                        break;
+                    case 4: // Sort by memory consumed
+                        swap = (NodePtrs[i]->memory_consumed < NodePtrs[j]->memory_consumed);
+                        break;
+                    default:
+                        break;
+                }
+                if (swap) {
                     DT* temp = NodePtrs[i];
                     NodePtrs[i] = NodePtrs[j];
                     NodePtrs[j] = temp;
                 }
             }
         }
+
+        // Now adjust the linked list (front, rear) based on the new sorted NodePtrs array
+        Queue<DT>* prev = nullptr;
+        front = nullptr;
+        rear = nullptr;
+
+        for (int i = 0; i < size; ++i) {
+            Queue<DT>* newNode = new Queue<DT>(NodePtrs[i]);
+
+            if (!front) {
+                front = newNode;  // First node becomes front
+            } else {
+                prev->next = newNode;  // Link previous node to the current one
+            }
+
+            prev = newNode;
+            rear = newNode;  // Update rear to the current node
+        }
+
+        // Ensure the rear node's next is set to nullptr
+        if (rear) {
+            rear->next = nullptr;
+        }
     }
 
 public:
-    NovelQueue() : front(nullptr), rear(nullptr), size(0) {}
+    NovelQueue() : front(nullptr), rear(nullptr), size(0), sort_attribute(1) {}  // Default: sort by job_id
 
     // Method to enqueue a new job
     void enqueue(DT* job, string& output, bool print_output = true) {
@@ -105,9 +148,11 @@ public:
         if (!front) 
             return nullptr;
 
+        rear->JobPointer->display();
+        front->JobPointer->display();
         Queue<DT>* temp = front;
-        DT* jobT = front->JobPointer;
         front = front->next;
+        
         if (!front) 
             rear = nullptr;
 
@@ -145,7 +190,7 @@ public:
                 NodePtrs[i]->display(output);
                 output += "Jobs after modification:\n";
                 display(output);
-                sortNodePtrs();
+                //sortNodePtrs();
                 break;
             }
         }
@@ -166,7 +211,7 @@ public:
                 NodePtrs[i]->display(output);
                 output += "Jobs after changing field:\n";
                 display(output);
-                sortNodePtrs();
+                //sortNodePtrs();
                 return;
             }
         }
@@ -303,7 +348,7 @@ public:
 
         // Enqueue the sorted jobs into both the NodePtrs array and the linked queue
         for (int i = 0; i < size; ++i) {
-            newQueue->enqueue(tempQueue[i], output, true);  // Suppress enqueue output
+            newQueue->enqueue(tempQueue[i], output, false);  // Suppress enqueue output
         }
 
         // Rebuild the NodePtrs array based on the new queue order
@@ -429,3 +474,7 @@ int main() {
     
     return 0;
 }
+
+
+
+
