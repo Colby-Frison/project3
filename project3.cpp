@@ -288,12 +288,18 @@ public:
                         break;
                     case 2:  // Sort by priority
                         if (tempQueue[i]->priority > tempQueue[j]->priority) swap = true;
+                        else if (tempQueue[i]->priority == tempQueue[j]->priority && tempQueue[i]->job_id > tempQueue[j]->job_id)
+                            swap = true;  // Fallback to job_id if priority is the same
                         break;
                     case 3:  // Sort by CPU time consumed
                         if (tempQueue[i]->cpu_time_consumed > tempQueue[j]->cpu_time_consumed) swap = true;
+                        else if (tempQueue[i]->cpu_time_consumed == tempQueue[j]->cpu_time_consumed && tempQueue[i]->job_id > tempQueue[j]->job_id)
+                            swap = true;
                         break;
                     case 4:  // Sort by memory consumed
                         if (tempQueue[i]->memory_consumed > tempQueue[j]->memory_consumed) swap = true;
+                        else if (tempQueue[i]->memory_consumed == tempQueue[j]->memory_consumed && tempQueue[i]->job_id > tempQueue[j]->job_id)
+                            swap = true;
                         break;
                     default:
                         output += "Invalid attribute index!\n";
@@ -446,7 +452,3 @@ int main() {
     
     return 0;
 }
-
-
-
-
